@@ -16,6 +16,7 @@ datasource db {
 
 enum OrderStatus {
   PENDING
+  PAID
   DELIVERED
   CANCELLED
 }
@@ -25,14 +26,16 @@ model Order {
   totalAmount Float
   totalItems  Int
 
-  status OrderStatus @default(PENDING)
-  paid   Boolean     @default(false)
-  paidAt DateTime?
+  status       OrderStatus @default(PENDING)
+  paid         Boolean     @default(false)
+  paidAt       DateTime?
+  stripeCharge String? // Almacenará el chargeId que viene en stripePaymentId del paidOrderDto del event: 'payment.succeeded'
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
 
-  OrderItem OrderItem[]
+  OrderItem    OrderItem[]
+  OrderReceipt OrderReceipt? // Relación uno a uno
 }
 
 model OrderItem {
@@ -43,4 +46,15 @@ model OrderItem {
 
   Order   Order?  @relation(fields: [orderId], references: [id])
   orderId String?
+}
+
+model OrderReceipt {
+  id String @id @default(uuid())
+
+  order   Order  @relation(fields: [orderId], references: [id])
+  orderId String @unique  // Cada order solo tendrá un recibo
+
+  receiptUrl String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
