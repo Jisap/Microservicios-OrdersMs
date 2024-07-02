@@ -29,7 +29,7 @@ model Order {
   status       OrderStatus @default(PENDING)
   paid         Boolean     @default(false)
   paidAt       DateTime?
-  stripeCharge String? // Almacenará el chargeId que viene en stripePaymentId del paidOrderDto del event: 'payment.succeeded'
+  stripeChargeId String? // Almacenará el chargeId que viene en stripePaymentId del paidOrderDto del event: 'payment.succeeded'
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
