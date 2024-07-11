@@ -10,8 +10,6 @@ COPY package-lock.json ./
 RUN npm install
 
 
-
-
 # Builder - Construye la aplicación
 
 FROM node:21-alpine3.19 as build
